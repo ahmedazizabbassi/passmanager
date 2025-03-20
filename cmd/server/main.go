@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/ahmedazizabbassi/pass/internal/auth"
 	"github.com/ahmedazizabbassi/pass/internal/database"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -33,6 +34,11 @@ func main() {
 			"db":     "connected",
 		})
 	})
+
+	authRouter := router.Group("/auth")
+	auth.NewHandler(
+		auth.NewService(auth.NewRepository(database.DB)),
+	).RegisterRoutes(authRouter)
 
 	log.Printf("Server starting on port %s", port)
 	if err := router.Run(":" + port); err != nil {

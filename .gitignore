@@ -19,6 +19,7 @@ vendor/
 .env
 
 # IDE specific files
+.run/
 .idea/
 .vscode/
 *.swp
