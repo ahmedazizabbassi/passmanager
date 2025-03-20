@@ -10,6 +10,7 @@ import (
 type Repository interface {
 	CreateUser(ctx context.Context, user *models.User) error
 	UserExists(ctx context.Context, email string) (bool, error)
+	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
 }
 
 type repository struct {
@@ -28,4 +29,10 @@ func (r *repository) UserExists(ctx context.Context, email string) (bool, error)
 	var count int64
 	err := r.db.WithContext(ctx).Model(&models.User{}).Where("email = ?", email).Count(&count).Error
 	return count > 0, err
+}
+
+func (r *repository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	var user models.User
+	err := r.db.WithContext(ctx).Model(&models.User{}).Where("email = ?", email).First(&user).Error
+	return &user, err
 }

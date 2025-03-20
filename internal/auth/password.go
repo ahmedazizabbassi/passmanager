@@ -102,3 +102,11 @@ func decodeHash(encodedHash string) (*passwordConfig, []byte, []byte, error) {
 
 	return p, salt, hash, nil
 }
+
+func verifyHash(password, encodedHash string) bool {
+	match, err := comparePasswordAndHash(password, encodedHash)
+	if err != nil {
+		return false
+	}
+	return match
+}

@@ -9,6 +9,7 @@ import (
 
 type Service interface {
 	Register(ctx context.Context, email, password string) (*models.User, error)
+	Login(ctx context.Context, email, password string) (*models.User, error)
 }
 
 type service struct {
@@ -40,6 +41,19 @@ func (s *service) Register(ctx context.Context, email, password string) (*models
 
 	if err := s.repo.CreateUser(ctx, user); err != nil {
 		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *service) Login(ctx context.Context, email, password string) (*models.User, error) {
+	user, err := s.repo.GetUserByEmail(ctx, email)
+	if err != nil {
+		return nil, errors.New("invalid credentials")
+	}
+
+	if !verifyHash(password, user.PasswordHash) {
+		return nil, errors.New("invalid credentials")
 	}
 
 	return user, nil
