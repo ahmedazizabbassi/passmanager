@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/ahmedazizabbassi/pass/internal/models"
-	"github.com/alexedwards/argon2id"
 )
 
 type Service interface {
@@ -30,7 +29,7 @@ func (s *service) Register(ctx context.Context, email, password string) (*models
 		return nil, errors.New("user already exists")
 	}
 
-	hash, err := argon2id.CreateHash(password, argon2id.DefaultParams)
+	hash, err := generateHash(password, defaultConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +52,7 @@ func (s *service) Login(ctx context.Context, email, password string) (*models.Us
 		return nil, errors.New("invalid credentials")
 	}
 
-	if match, err := argon2id.ComparePasswordAndHash(password, user.PasswordHash); err != nil || !match {
+	if !verifyHash(password, user.PasswordHash) {
 		return nil, errors.New("invalid credentials")
 	}
 
