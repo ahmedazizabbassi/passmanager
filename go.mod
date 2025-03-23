@@ -3,6 +3,7 @@ module github.com/ahmedazizabbassi/pass
 go 1.21
 
 require (
+	github.com/alexedwards/argon2id v1.0.0
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/google/uuid v1.6.0
