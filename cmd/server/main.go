@@ -4,6 +4,10 @@ import (
 	"log"
 	"os"
 
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "github.com/ahmedazizabbassi/pass/api/docs"
 	"github.com/ahmedazizabbassi/pass/internal/auth"
 	"github.com/ahmedazizabbassi/pass/internal/database"
 	"github.com/gin-gonic/gin"
@@ -27,6 +31,8 @@ func main() {
 	}
 
 	router := gin.Default()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{

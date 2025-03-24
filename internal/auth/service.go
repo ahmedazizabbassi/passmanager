@@ -9,6 +9,7 @@ import (
 
 type Service interface {
 	Register(ctx context.Context, email, password string) (*models.User, error)
+
 	Login(ctx context.Context, email, password string) (*models.User, error)
 }
 
@@ -20,6 +21,17 @@ func NewService(repo Repository) Service {
 	return &service{repo: repo}
 }
 
+// Register a new user
+// @Summary Register a new user
+// @Description Register a new user with email and password
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param email body string true "Email"
+// @Param password body string true "Password"
+// @Success 200 {object} models.User
+// @Failure 400 {object} map[string]string
+// @Router /auth/register [post]
 func (s *service) Register(ctx context.Context, email, password string) (*models.User, error) {
 	exists, err := s.repo.UserExists(ctx, email)
 	if err != nil {
@@ -46,6 +58,17 @@ func (s *service) Register(ctx context.Context, email, password string) (*models
 	return user, nil
 }
 
+// Login a user
+// @Summary Login a user
+// @Description Login a user with email and password
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param email body string true "Email"
+// @Param password body string true "Password"
+// @Success 200 {object} models.User
+// @Failure 400 {object} map[string]string
+// @Router /auth/login [post]
 func (s *service) Login(ctx context.Context, email, password string) (*models.User, error) {
 	user, err := s.repo.GetUserByEmail(ctx, email)
 	if err != nil {
